@@ -24,9 +24,9 @@ class FaM:
         r = state.item(11)
 
         del_e = U.item(0)
-        del_r = U.item(1)
+        del_t = U.item(1)
         del_a = U.item(2)
-        del_t = U.item(3)
+        del_r = U.item(3)
 
         #Define Va, alpha, beta up here somewhere
         Va = max(np.sqrt(u**2+v**2+w**2), P.noZero)    #this doesn't account for wind
