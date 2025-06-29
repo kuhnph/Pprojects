@@ -4,16 +4,34 @@ from numpy import sin as s
 
     # Body to Inertial
 def rotBody2Inertial(phi, theta, psi):
-    # R = np.array([[np.cos(theta) * np.cos(psi), np.sin(phi) * np.sin(theta) * np.cos(psi) - np.cos(phi) * np.sin(psi),
-    #             np.cos(phi) * np.sin(theta) * np.cos(psi) + np.sin(phi) * np.sin(psi)],
-    #             [np.cos(theta) * np.sin(psi), np.sin(phi) * np.sin(theta) * np.sin(psi) + np.cos(phi) * np.cos(psi),
-    #             np.cos(phi) * np.sin(theta) * np.sin(psi) - np.sin(phi) * np.cos(psi)],
-    #             [-np.sin(theta), np.sin(phi) * np.cos(theta), np.cos(phi) * np.cos(theta)]])
-
     R = np.array([[c(theta)*c(psi), s(phi)*s(theta)*c(psi)-c(phi)*s(psi), c(phi)*s(theta)*c(psi)+s(phi)*s(psi)],
                             [c(theta)*s(psi), s(phi)*s(theta)*s(psi)+c(phi)*c(psi), c(phi)*s(theta)*s(psi)-s(phi)*c(psi)],
                             [-s(theta), s(phi)*c(theta), c(phi)*c(theta)]]) 
     return R
+
+def rotInertial2Body(phi,theta,psi):
+    R = np.array([[c(theta)*c(psi), s(phi)*s(theta)*c(psi)-c(phi)*s(psi), c(phi)*s(theta)*c(psi)+s(phi)*s(psi)],
+                            [c(theta)*s(psi), s(phi)*s(theta)*s(psi)+c(phi)*c(psi), c(phi)*s(theta)*s(psi)-s(phi)*c(psi)],
+                            [-s(theta), s(phi)*c(theta), c(phi)*c(theta)]]) 
+    return R.T
+
+def rotInertialFixed(phi, theta, psi):
+    R_phi = np.array([
+        [1, 0, 0],
+        [0, np.cos(phi), -np.sin(phi)],
+        [0, np.sin(phi), np.cos(phi)]])
+    R_theta = np.array([
+        [np.cos(theta), 0, np.sin(theta)],
+        [0, 1, 0],
+        [-np.sin(theta), 0, np.cos(theta)]])
+    R_psi = np.array([
+        [np.cos(psi), -np.sin(psi), 0],
+        [np.sin(psi), np.cos(psi), 0],
+        [0, 0, 1]])
+
+    # Apply in inertial (fixed) frame: R = Rx(phi) @ Ry(theta) @ Rz(psi)
+    return R_phi @ R_theta @ R_psi
+
 
 def drawPlane(pn, pe, pd, phi, theta, psi):
     # scale = 0.8
@@ -101,22 +119,3 @@ def drawPlane(pn, pe, pd, phi, theta, psi):
         [V[:, v6], V[:, v15], V[:, v16], V[:, v6]]]
 
     return F
-
-
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-
-# fig = plt.figure()
-# ax = fig.add_subplot(111, projection='3d')
-
-# F = drawPlane(0, 0, 0, 0, .5, 0)
-
-# for face in F:
-#     ax.add_collection3d(Poly3DCollection([face], facecolors='lightblue', linewidths=1, edgecolors='black'))
-
-# ax.set_xlim([-20, 20])
-# ax.set_ylim([-20, 20])
-# ax.set_zlim([-10, 10])
-# ax.set_box_aspect([1,1,0.5])  # Optional: for a better aspect ratio
-
-# plt.show()

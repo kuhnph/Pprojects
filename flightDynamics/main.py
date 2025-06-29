@@ -10,20 +10,23 @@ from dynamics import dynamics
 from plotting import plotting
 from animation import animation
 
+customState = np.array([[0,0,0,0,0,0,np.radians(90),np.radians(0),np.radians(40),0,0,0]]).T
+
 D = dynamics()
 P = params()
 Pl = plotting()
 A = animation(P.state0)
 timeSteps = int(P.T_end/P.Ts)
 time = 0
+u_star = P.u_star
 
 #Set up storage for states
 stateStorage = np.zeros((timeSteps,len(D.state[:,0])+1))
 FaMStorage = np.zeros((timeSteps,7))
 
 for i in range(timeSteps):
-    u = np.array([0,0,0,0])
-    D.update(u)
+
+    D.update(u_star)
 
     if i % P.plot_delimination == 0:
         A.update(D.state, time)
