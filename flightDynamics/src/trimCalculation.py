@@ -197,7 +197,7 @@ def gradient_descent_trim(J_func, alpha0, beta0, phi0, Va, gamma, R,
 def main():
     Va_star = 10
     gamma_star = 0
-    R_star = 40
+    R_star = 20
     alpha_star = 0
     beta_star = 0
     phi_star = 0
@@ -209,7 +209,7 @@ def main():
     u_star = trimInput(state_star,Va_star,alpha_star,beta_star)
 
     print('\nTrim Inputs:')
-    print(u_star)
+    print(f'u_star = np.array([[{u_star.item(0)},{u_star.item(1)},{u_star.item(2)},{u_star.item(3)}]]).T')
 
     print('\nTrim States')
     print(f'trimState = np.array([[{state_star.item(0)},{state_star.item(1)},{state_star.item(2)},{state_star.item(3)},{state_star.item(4)},{state_star.item(5)},{state_star.item(6)},{state_star.item(7)},{state_star.item(8)},{state_star.item(9)},{state_star.item(10)},{state_star.item(11)}]]).T')

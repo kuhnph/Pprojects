@@ -3,9 +3,9 @@ import numpy as np
 class params:
     def __init__(self):
         #simulation params
-        self.Ts = 0.01
+        self.Ts = 0.05
         self.T_end = 1e3
-        self.plot_delimination = 10
+        self.plot_delimination = 5
 
         #Pysical properties
         self.noZero = 1e-3
@@ -91,13 +91,10 @@ class params:
                            [0], #q
                            [0]])#r
 
-        trimState = np.array([[0.0,0.0,0.0,9.694686047502138,0.003923524941972374,2.452151513736334,0.02871232415202485,0.24774163287588635,0.0,-0.061303792561976156,0.006957968630313897,0.24226727325426717]]).T
+        trimState = np.array([[0.0,0.0,0.0,9.692593757693086,0.005146884859776479,2.4604064212859775,0.06529425847645598,0.248593226643834,0.0,-0.12302033735860429,0.03162106056031524,0.4835970483007687]]).T
         self.state0=trimState
 
-        self.u_star = np.array([[-0.50483612],   #elevon
-                                [ 0.28274548],   #thrust
-                                [-0.01614447],   #aleron
-                                [ 0.00829666]]) #rudder
+        self.u_star = np.array([[-0.5093624027400666,0.2961593005193345,0.0016042478368464544,-0.033006520032869385]]).T
 
     def R_body_to_inertial(self, phi, theta, psi):
         c_phi = np.cos(phi)

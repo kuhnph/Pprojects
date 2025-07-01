@@ -42,5 +42,5 @@ for i in range(timeSteps):
     time+=P.Ts
 
 print('Sim Ended')
-Pl.staticPlotState(stateStorage)
-Pl.staticPlotFaM(FaMStorage)
+Pl.staticPlotState(stateStorage[0:i])
+Pl.staticPlotFaM(FaMStorage[0:i])

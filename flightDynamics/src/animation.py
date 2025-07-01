@@ -3,12 +3,13 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.widgets import Button
 from params import params
 from drawPlane import drawPlane
-
 P = params()
+
+
 class animation:
     def __init__(self,state):
         # Create 3D plot
-        self.fig = plt.figure(figsize=(12,12))
+        self.fig = plt.figure(figsize=(8,8))
         self.ax = self.fig.add_subplot(111, projection='3d')
         
         #Kill button
@@ -26,9 +27,9 @@ class animation:
         self.ax.set_zlabel('Down [m]')
 
         # Set axis limits
-        self.ax.set_xlim([-100, 100])  # North
-        self.ax.set_ylim([-100, 100])  # East
-        self.ax.set_zlim([-100, 100])   # Down (remember, positive down in NED)
+        self.ax.set_xlim([-200, 200])  # North
+        self.ax.set_ylim([-200, 200])  # East
+        self.ax.set_zlim([-200, 200])   # Down (remember, positive down in NED)
 
         # Set equal aspect for better visualization
         self.ax.set_box_aspect([1,1,1])
