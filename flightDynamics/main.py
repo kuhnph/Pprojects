@@ -17,7 +17,9 @@ Pl = plotting()
 A = animation(P.state0)
 timeSteps = int(P.T_end/P.Ts)
 time = 0
-u_star = P.u_star #Create trim states
+
+#Create states for trim
+u_star = P.u_star
 
 #Set up storage for states
 stateStorage = np.zeros((timeSteps,len(D.state[:,0])+1))
