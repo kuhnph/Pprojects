@@ -86,16 +86,28 @@ while t < P.t_end:
 if ANIMATE:
     # post-processing for animation or close sim
     if FUNCANIMATE:
-        #save Movies
         print()
         print('frame count:', i)
-        vehicleMovie = animation.FuncAnimation(animy.fig, animy.updateAnim, int(i), fargs=(x_history,time_history,),  interval=1, blit=False)
-        print('Saving Vehicle Movie...')
-        vehicleMovie.save("VehicleMovie.gif", writer=animation.PillowWriter(fps=30))
 
-        plotMovie = animation.FuncAnimation(fPlot.fig1, fPlot.update, int(i), fargs=(time_history,x_history,ref_history))
-        plotMovie.save("PlotMovie.gif", writer=animation.PillowWriter(fps=30))
-        print('Saving Plot Movie...')
+        ######################################################
+        '''
+        Dump
+
+        I want to get all my variables on a json for testing
+        '''
+        np.savez('sim_states.npz',
+                 time=time_history,
+                 stateVars=x_history,
+                 refVars=ref_history)
+        quit()
+        ######################################################
+
+        ani = animation.FuncAnimation(animy.fig, animy.updateAnim, int(i), fargs=(x_history,time_history,),  interval=1, blit=False)
+        plotAni = animation.FuncAnimation()
+        print('saving...')
+        data.staticPlot(t,ref,x,control)
+        #plt.show(block=True)
+        ani.save("movie.gif", writer=animation.PillowWriter(fps=30))
         print('done')
     else:
         print('Press key to close')
