@@ -3,13 +3,13 @@ os.system('cls' if os.name == 'nt' else 'clear') #this is my line. Don't touch
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
-import foo.rotorParams as P
-from foo.rotorAnimation import rotorAnimation
-from foo.dataPlotter import dataPlotter
-from foo.rotorDynamics import rotorDynamics
-from foo.FSFB_controller import FSFB
-from foo.path_follow import pathFollow
-from foo.quadRotorFuncPlots import quadRotorFuncPlots
+import src.rotorParams as P
+from src.rotorAnimation import rotorAnimation
+from src.dataPlotter import dataPlotter
+from src.rotorDynamics import rotorDynamics
+from src.FSFB_controller import FSFB
+from src.path_follow import pathFollow
+from src.quadRotorFuncPlots import quadRotorFuncPlots
 
 
 #################################################
