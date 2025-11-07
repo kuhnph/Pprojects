@@ -4,7 +4,7 @@ class params:
     def __init__(self):
         #simulation params
         self.Ts = 0.05
-        self.T_end = 1e3
+        self.T_end = 60
         self.plot_delimination = 5
 
         #Pysical properties
@@ -78,8 +78,8 @@ class params:
 
 
 
-        self.state0 = np.array([[0], #Pn
-                           [0], #Pe
+        self.state0 = np.array([[200], #Pn
+                           [200], #Pe
                            [0], #Pd
                            [10], #u
                            [0], #v
