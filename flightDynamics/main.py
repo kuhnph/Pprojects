@@ -9,6 +9,8 @@ from params import params
 from dynamics import dynamics
 from plotting import plotting
 from animation import animation
+from trimCalculation import main as trim
+
 
 #Initialize Classes
 D = dynamics()
@@ -19,7 +21,8 @@ timeSteps = int(P.T_end/P.Ts)
 time = 0
 
 #Create states for trim
-u_star = P.u_star
+u_star, state0 = trim()
+D.state=state0
 
 #Set up storage for states
 stateHistory = np.zeros((timeSteps,len(D.state[:,0])))
@@ -27,7 +30,7 @@ FaMHistory = np.zeros((timeSteps,6))
 timeHistory = np.zeros((timeSteps,1))
 
 #Flag and setup for video saving
-saveVideo = False
+saveVideo = True
 if saveVideo: 
     import matplotlib.animation as animation
     from funcAnimate import funcAnimation
@@ -39,7 +42,7 @@ for i in range(timeSteps):
     D.update(u_star)
 
     #update the animation
-    if i % P.plot_delimination == 0 and not True:
+    if i % P.plot_delimination == 0 and not saveVideo:
         A.update(D.state, time)
         
         #Kill the animation if I want
@@ -59,6 +62,8 @@ if saveVideo:
     vehicleMovie.save("results/VehicleMovie.gif", writer=animation.PillowWriter(fps=30))
     print('Sim Ended')
 
-
-Pl.staticPlotState(stateHistory[0:i], timeHistory[0:i])
-Pl.staticPlotFaM(FaMHistory[0:i], timeHistory[0:i])
+#Flag for showing plots at the end
+PLOTS = False
+if PLOTS:
+    Pl.staticPlotState(stateHistory[0:i], timeHistory[0:i])
+    Pl.staticPlotFaM(FaMHistory[0:i], timeHistory[0:i])

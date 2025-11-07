@@ -214,5 +214,4 @@ def main():
     print('\nTrim States')
     print(f'trimState = np.array([[{state_star.item(0)},{state_star.item(1)},{state_star.item(2)},{state_star.item(3)},{state_star.item(4)},{state_star.item(5)},{state_star.item(6)},{state_star.item(7)},{state_star.item(8)},{state_star.item(9)},{state_star.item(10)},{state_star.item(11)}]]).T')
 
-
-main()
+    return u_star, state_star.T
