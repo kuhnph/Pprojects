@@ -195,9 +195,9 @@ def gradient_descent_trim(J_func, alpha0, beta0, phi0, Va, gamma, R,
 
 
 def main():
-    Va_star = 10
+    Va_star = 20
     gamma_star = 0
-    R_star = 20
+    R_star = 200
     alpha_star = 0
     beta_star = 0
     phi_star = 0

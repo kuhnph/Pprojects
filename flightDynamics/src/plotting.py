@@ -6,10 +6,10 @@ class plotting:
     def __init__(self):
         pass
 
-    def staticPlotState(self, stateStorage):
+    def staticPlotState(self, stateHistory, timeHistory):
         # Transpose so each row is a state, and the last row is time
-        stateStorage = stateStorage.T
-        time = stateStorage[-1]
+        stateHistory = stateHistory.T
+        time = timeHistory
 
         # Define titles and y-labels for each state
         state_labels = [
@@ -33,7 +33,7 @@ class plotting:
 
         # Loop through each state
         for i in range(12):
-            ax[i].plot(time, stateStorage[i])
+            ax[i].plot(time, stateHistory[i])
             ax[i].set_title(state_labels[i][0], fontsize=12)
             ax[i].set_ylabel(state_labels[i][1], fontsize=10)
             ax[i].set_xlabel("Time [s]")
@@ -43,10 +43,10 @@ class plotting:
         plt.tight_layout()
         plt.show()
 
-    def staticPlotFaM(self, FaMStorage):
+    def staticPlotFaM(self, FaMHistory, timeHistory):
         # Transpose so each row is a state, and the last row is time
-        FaMStorage = FaMStorage.T
-        time = FaMStorage[-1]
+        FaMHistory = FaMHistory.T
+        time = timeHistory
 
         # Define titles and y-labels for each state
         state_labels = [
@@ -63,8 +63,8 @@ class plotting:
         ax = ax.flatten()
 
         # Loop through each state
-        for i in range(len(FaMStorage)-1):
-            ax[i].plot(time, FaMStorage[i])
+        for i in range(len(FaMHistory)):
+            ax[i].plot(time, FaMHistory[i])
             ax[i].set_title(state_labels[i][0], fontsize=12)
             ax[i].set_ylabel(state_labels[i][1], fontsize=10)
             ax[i].set_xlabel("Time [s]")

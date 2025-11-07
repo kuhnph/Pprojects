@@ -22,8 +22,12 @@ time = 0
 u_star = P.u_star
 
 #Set up storage for states
-stateStorage = np.zeros((timeSteps,len(D.state[:,0])+1))
-FaMStorage = np.zeros((timeSteps,7))
+stateHistory = np.zeros((timeSteps,len(D.state[:,0])))
+FaMHistory = np.zeros((timeSteps,6))
+timeHistory = np.zeros((timeSteps,1))
+
+#Flag and setup for video saving
+saveVideo = True
 
 for i in range(timeSteps):
 
@@ -39,10 +43,11 @@ for i in range(timeSteps):
             break
     
     #Store state variables
-    stateStorage[i] = np.concatenate((D.state.flatten(), [time]))
-    FaMStorage[i] = np.concatenate((np.concatenate((P.R_body_to_inertial(D.state.item(6),D.state.item(7),D.state.item(8))@D.F.flatten(),D.M.flatten())), [time]))
+    stateHistory[i] = D.state.flatten()
+    FaMHistory[i] = np.concatenate((P.R_body_to_inertial(D.state.item(6),D.state.item(7),D.state.item(8))@D.F.flatten(),D.M.flatten()))
+    timeHistory[i] = time
     time+=P.Ts
 
 print('Sim Ended')
-Pl.staticPlotState(stateStorage[0:i])
-Pl.staticPlotFaM(FaMStorage[0:i])
+Pl.staticPlotState(stateHistory[0:i], timeHistory[0:i])
+Pl.staticPlotFaM(FaMHistory[0:i], timeHistory[0:i])
