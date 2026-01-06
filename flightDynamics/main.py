@@ -5,11 +5,11 @@ src_path = os.path.join(os.path.dirname(__file__), "src")
 sys.path.append(src_path)
 
 import numpy as np
-from params import params
-from dynamics import dynamics
-from plotting import plotting
-from animation import animation
-from trimCalculation import main as trim
+from sim.params import params
+from sim.dynamics import dynamics
+from viewer.plotting import plotting
+from viewer.animation import animation
+from control.trimCalculation import main as trim
 
 
 #Initialize Classes
@@ -30,7 +30,7 @@ FaMHistory = np.zeros((timeSteps,6))
 timeHistory = np.zeros((timeSteps,1))
 
 #Flag and setup for video saving
-saveVideo = True
+saveVideo = False
 if saveVideo: 
     import matplotlib.animation as animation
     from funcAnimate import funcAnimation

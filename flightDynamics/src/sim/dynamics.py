@@ -1,6 +1,6 @@
 import numpy as np
-from params import params
-from FaM import FaM
+from sim.params import params
+from sim.FaM import FaM
 from numpy import cos as c
 from numpy import sin as s
 from numpy import tan

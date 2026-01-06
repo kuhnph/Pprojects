@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from params import params
+from sim.params import params
 
 P = params()
 class plotting:

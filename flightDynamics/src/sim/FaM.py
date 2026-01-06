@@ -1,4 +1,4 @@
-from params import params
+from sim.params import params
 import numpy as np
 from numpy import cos, sin
 

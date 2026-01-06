@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.widgets import Button
-from params import params
-from drawPlane import drawPlane
+from sim.params import params
+from viewer.drawPlane import drawPlane
 P = params()
 
 
