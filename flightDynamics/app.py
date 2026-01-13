@@ -5,13 +5,14 @@ src_path = os.path.join(os.path.dirname(__file__), "src")
 sys.path.append(src_path)
 import numpy as np
 from sim.dynamics import dynamics
+from sim.params import params
 from viewer.mesh import aircraft_model_mesh
 from viewer.renderer import Renderer
 from viewer.window import SimWindow
 
-
 def main():
     dyn = dynamics()
+    P = params()
 
     # Static mesh once
     V, idx = aircraft_model_mesh(scale=5.0)
@@ -20,7 +21,12 @@ def main():
         # Your dynamics uses fixed Ts internally; easiest is:
         # run N substeps if your Ts != dt
         # For now: assume you set dyn.Ts to dt or keep dyn.Ts and step once per tick.
+        if P.T >= P.T_end:
+            pyglet.app.exit()
+            return
+        
         dyn.update(u=dyn_u())
+        P.T += P.Ts
 
     def dyn_u():
         # simplest: hold trim input from params

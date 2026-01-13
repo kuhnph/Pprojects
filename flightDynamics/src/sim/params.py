@@ -3,9 +3,10 @@ import numpy as np
 class params:
     def __init__(self):
         #simulation params
+        self.T = 0
         self.Ts = 0.05
-        self.T_end = 120
-        self.plot_delimination = 5
+        self.T_end = 20
+        self.N = self.T_end/self.Ts
 
         #Pysical properties
         self.noZero = 1e-3

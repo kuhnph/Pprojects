@@ -1,17 +1,20 @@
 import numpy as np
 from sim.params import params
 from sim.FaM import FaM
+from plotting.dataLogging import Logger
 from numpy import cos as c
 from numpy import sin as s
 from numpy import tan
 
 P = params()
 FM = FaM()
+L = Logger()
 
 class dynamics:
     def __init__(self):
         self.state = P.state0
         self.Ts = P.Ts
+        self.T = 0
 
     def rk4(self,u):
         F1 = self.f(self.state,u)
@@ -77,6 +80,12 @@ class dynamics:
         return xDot
 
     def update(self,u):
+        #Log before update
+        L.log(self.T, self.state, u)
+        print(self.T)
+        if self.T >= P.T_end-P.Ts:
+            L.export()
+        self.T += self.Ts
         self.rk4(u)
 
 #Newton's laws only hold in the inertial frame. This is important
