@@ -5,9 +5,9 @@ src_path = os.path.join(os.path.dirname(__file__), "src")
 sys.path.append(src_path)
 import numpy as np
 from sim.dynamics import dynamics
-from _viewer.mesh import aircraft_model_mesh
-from _viewer.renderer import Renderer
-from _viewer.window import SimWindow
+from viewer.mesh import aircraft_model_mesh
+from viewer.renderer import Renderer
+from viewer.window import SimWindow
 
 
 def main():
