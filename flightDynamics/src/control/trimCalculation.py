@@ -1,4 +1,9 @@
+import sys
+import os
+src_path = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(src_path)
 from sim.params import params
+
 import numpy as np
 from numpy import cos, sin
 from sim.dynamics import dynamics
@@ -197,7 +202,7 @@ def gradient_descent_trim(J_func, alpha0, beta0, phi0, Va, gamma, R,
 def main():
     Va_star = 20
     gamma_star = 0
-    R_star = 200
+    R_star = 1000
     alpha_star = 0
     beta_star = 0
     phi_star = 0
@@ -215,3 +220,4 @@ def main():
     print(f'trimState = np.array([[{state_star.item(0)},{state_star.item(1)},{state_star.item(2)},{state_star.item(3)},{state_star.item(4)},{state_star.item(5)},{state_star.item(6)},{state_star.item(7)},{state_star.item(8)},{state_star.item(9)},{state_star.item(10)},{state_star.item(11)}]]).T')
 
     return u_star, state_star.T
+main()
