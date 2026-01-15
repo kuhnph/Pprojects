@@ -25,12 +25,15 @@ class Logger:
         """
         t = self.t
         x = self.x
+        u = self.u
         state_cols = ["pn","pe","pd","u","v","w","phi","theta","psi","p","q","r"]
         u_cols = ["del_e","del_t","del_a","del_r"]
-        df = pd.DataFrame(x, columns=state_cols)
+        df_x = pd.DataFrame(x, columns=state_cols)
+        df_u = pd.DataFrame(u, columns=u_cols)
+        df = pd.concat([df_x,df_u], axis=1)
         df.insert(0, 't', t)
         df.to_parquet(os.path.join('out',"output.parquet"), index=False)
-        np.savez_compressed(os.path.join('out',"output"), t=t, x=x)
+        np.save(os.path.join('out',"output.npz"),df)
 
 
     def trim(self):

@@ -82,7 +82,6 @@ class dynamics:
     def update(self,u):
         #Log before update
         L.log(self.T, self.state, u)
-        print(self.T)
         if self.T >= P.T_end-P.Ts:
             L.export()
         self.T += self.Ts

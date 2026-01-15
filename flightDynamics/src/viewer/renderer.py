@@ -131,14 +131,14 @@ class Renderer:
         self.fovy = 60.0
         self.znear = 0.1
         self.zfar = 5000.0
-        self.camera_mode = "fixed_lookat"
+        self.camera_mode = "chase"
         # Offsets / fixed camera points
         self.chase_offset = np.array([-250, -250, -120], dtype=np.float32)
-        self.fixed_eye = np.array([-300, -300, -150], dtype=np.float32)
+        self.fixed_eye = np.array([0, -600, 0], dtype=np.float32)
         self.fixed_target = np.array([0, 0, 0], dtype=np.float32)
 
         # ---------- Trail ----------
-        self.maxTrail = 2000
+        self.maxTrail = 1200
         self.trail = np.zeros((self.maxTrail, 3), dtype=np.float32)
         self.trailCount = 0
         self.trail_vbo = self.ctx.buffer(reserve=self.trail.nbytes) #virtual buffer object for the trail
