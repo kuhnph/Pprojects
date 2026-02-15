@@ -1,14 +1,18 @@
+# src/sim/FaM - 2/15/2026
+from __future__ import annotations
+
 from sim.params import params
 import numpy as np
 from numpy import cos, sin
 
 P = params()
 
+# P is now provided by the caller (dynamics) to avoid globals.
 class FaM:
-    def __init__(self):
-        pass
+    def __init__(self, P: params | None = None):
+        self.P = P if P is not None else params()
 
-    def FaM_Calc(state, U):
+    def FaM_Calc(self, state, U):
         #pull states in to variables to make things a tad easier
         pn = state.item(0)
         pe = state.item(1)

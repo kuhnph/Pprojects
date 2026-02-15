@@ -1,0 +1,27 @@
+ffmpeg version 6.1.1 Copyright (c) 2000-2023 the FFmpeg developers
+  built with gcc 11.2.0 (Anaconda gcc)
+  configuration: --prefix=/home/kuhnph19/anaconda3/envs/MAV --cc=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-cc --ar=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-ar --nm=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-nm --ranlib=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-ranlib --strip=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-strip --disable-doc --enable-swresample --enable-swscale --enable-openssl --enable-libxml2 --enable-libtheora --enable-demuxer=dash --enable-postproc --enable-hardcoded-tables --enable-libfreetype --enable-libharfbuzz --enable-libfontconfig --enable-libdav1d --enable-zlib --enable-libaom --enable-pic --enable-shared --disable-static --disable-gpl --enable-version3 --disable-sdl2 --enable-libopenh264 --enable-libopus --enable-libmp3lame --enable-libopenjpeg --enable-libvorbis --enable-pthreads --enable-libtesseract --enable-libvpx
+  libavutil      58. 29.100 / 58. 29.100
+  libavcodec     60. 31.102 / 60. 31.102
+  libavformat    60. 16.100 / 60. 16.100
+  libavdevice    60.  3.100 / 60.  3.100
+  libavfilter     9. 12.100 /  9. 12.100
+  libswscale      7.  5.100 /  7.  5.100
+  libswresample   4. 12.100 /  4. 12.100
+Input #0, rawvideo, from 'fd:':
+  Duration: N/A, start: 0.000000, bitrate: 1152000 kb/s
+  Stream #0:0: Video: rawvideo (RGB[24] / 0x18424752), rgb24, 1000x800, 1152000 kb/s, 60 tbr, 60 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (rawvideo (native) -> h264 (libopenh264))
+[libopenh264 @ 0x37f2a5c0] [OpenH264] this = 0x0x383402d0, Warning:layerId(0) doesn't support profile(578), change to UNSPECIFIC profile
+[libopenh264 @ 0x37f2a5c0] [OpenH264] this = 0x0x383402d0, Warning:bEnableFrameSkip = 0,bitrate can't be controlled for RC_QUALITY_MODE,RC_BITRATE_MODE and RC_TIMESTAMP_MODE without enabling skip frame.
+Output #0, mp4, to 'out/mav_view.mp4':
+  Metadata:
+    encoder         : Lavf60.16.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1000x800, q=2-31, 10000 kb/s, 60 fps, 15360 tbn
+    Metadata:
+      encoder         : Lavc60.31.102 libopenh264
+    Side data:
+      cpb: bitrate max/min/avg: 10000000/0/10000000 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.00 bitrate=N/A speed=N/A    frame=   27 fps=0.0 q=-0.0 size=       0kB time=00:00:00.45 bitrate=   0.9kbits/s speed=0.873x    frame=   53 fps= 51 q=-0.0 size=       0kB time=00:00:00.88 bitrate=   0.4kbits/s speed=0.856x    frame=   79 fps= 51 q=-0.0 size=       0kB time=00:00:01.31 bitrate=   0.3kbits/s speed=0.854x    frame=  104 fps= 51 q=-0.0 size=       0kB time=00:00:01.73 bitrate=   0.2kbits/s speed=0.846x    frame=  129 fps= 50 q=-0.0 size=       0kB time=00:00:02.15 bitrate=   0.2kbits/s speed=0.837x    frame=  155 fps= 50 q=-0.0 size=       0kB time=00:00:02.58 bitrate=   0.1kbits/s speed=0.838x    frame=  182 fps= 51 q=-0.0 size=       0kB time=00:00:03.03 bitrate=   0.1kbits/s speed=0.843x    frame=  208 fps= 51 q=-0.0 size=       0kB time=00:00:03.46 bitrate=   0.1kbits/s speed=0.844x    frame=  235 fps= 51 q=-0.0 size=     256kB time=00:00:03.91 bitrate= 535.5kbits/s speed=0.85x    frame=  261 fps= 51 q=-0.0 size=     256kB time=00:00:04.35 bitrate= 482.2kbits/s speed=0.851x    frame=  286 fps= 51 q=-0.0 size=     256kB time=00:00:04.76 bitrate= 440.0kbits/s speed=0.848x    frame=  311 fps= 51 q=-0.0 size=     256kB time=00:00:05.18 bitrate= 404.7kbits/s speed=0.846x    frame=  335 fps= 51 q=-0.0 size=     512kB time=00:00:05.58 bitrate= 751.3kbits/s speed=0.842x    [out#0/mp4 @ 0x37f285c0] video:546kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.394401%
+frame=  345 fps= 50 q=-0.0 Lsize=     549kB time=00:00:05.73 bitrate= 783.9kbits/s speed=0.837x    

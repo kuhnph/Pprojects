@@ -1,4 +1,9 @@
-# viewer/mesh.py
+# src/viewer/mesh.py - 2/15/2026
+"""viewer.mesh
+
+Defines simple hard-coded aircraft mesh vertices/indices used by the GPU renderer.
+
+""" 
 import numpy as np
 
 def aircraft_model_mesh(scale=5.0):

@@ -1,15 +1,19 @@
-# viewer/renderer.py
+# src/viewer/renderer.py - 2/15/2026
+"""viewer.renderer
+
+ModernGL renderer for drawing the aircraft mesh with a basic shaded pipeline.
+
+- Owns GPU buffers/shaders
+- Exposes draw(width,height,model_matrix)
+
+"""  
 import numpy as np
 import moderngl
+from sim.rotations import R_body_to_inertial
 
 def euler_to_R(phi, theta, psi):
-    c, s = np.cos, np.sin
-    R = np.array([
-        [c(theta)*c(psi), s(phi)*s(theta)*c(psi)-c(phi)*s(psi), c(phi)*s(theta)*c(psi)+s(phi)*s(psi)],
-        [c(theta)*s(psi), s(phi)*s(theta)*s(psi)+c(phi)*c(psi), c(phi)*s(theta)*s(psi)-s(phi)*c(psi)],
-        [-s(theta),       s(phi)*c(theta),                      c(phi)*c(theta)]
-    ], dtype=np.float32)
-    return R
+    """Backward-compatible wrapper for body->inertial DCM."""
+    return R_body_to_inertial(phi, theta, psi, dtype=np.float32)
 
 def model_matrix_from_state(pn, pe, pd, phi, theta, psi):
     # NED: x=north, y=east, z=down
@@ -133,7 +137,7 @@ class Renderer:
         self.zfar = 5000.0
         self.camera_mode = "chase"
         # Offsets / fixed camera points
-        self.chase_offset = np.array([-250, -250, -120], dtype=np.float32)
+        self.chase_offset = np.array([-250, -250, -600], dtype=np.float32)
         self.fixed_eye = np.array([0, -600, 0], dtype=np.float32)
         self.fixed_target = np.array([0, 0, 0], dtype=np.float32)
 
@@ -212,7 +216,9 @@ class Renderer:
 
         # Clear color + depth buffers
         # This wipes the previous frame
-        self.ctx.clear(0.05, 0.06, 0.08)
+        fb_w, fb_h = self.ctx.screen.size
+        self.ctx.viewport = (0, 0, int(fb_w), int(fb_h))
+
 
         # Aspect ratio needed for camera projection
         aspect = width / max(height, 1)
@@ -242,3 +248,8 @@ class Renderer:
         # Draw aircraft mesh (model = aircraft pose)
         self.u_mvp.write(mvp.T.tobytes())
         self.vao.render()
+
+    def read_frame_rgb(self) -> bytes:
+        # Read from default framebuffer (the screen)
+        # alignment=1 avoids row padding corruption
+        return self.ctx.screen.read(components=3, alignment=1)

@@ -1,3 +1,5 @@
+# src/control/trimCalculation - 2/15/2026
+
 import sys
 import os
 src_path = os.path.dirname(os.path.dirname(__file__))
@@ -202,7 +204,7 @@ def gradient_descent_trim(J_func, alpha0, beta0, phi0, Va, gamma, R,
 def main():
     Va_star = 20
     gamma_star = .5
-    R_star = 900
+    R_star = 100
     alpha_star = 0
     beta_star = 0
     phi_star = 0

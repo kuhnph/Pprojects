@@ -1,11 +1,13 @@
+# src/sim/params - 2/15/2026
 import numpy as np
+from sim.rotations import R_body_to_inertial
 
 class params:
     def __init__(self):
         #simulation params
         self.T = 0
         self.Ts = 0.05
-        self.T_end = 1e6
+        self.T_end = 10
         self.N = self.T_end/self.Ts
 
         #Pysical properties
@@ -79,21 +81,10 @@ class params:
 
 
 
-        self.state0 = np.array([[0.0,0.0,0.0,19.98199542736944,-3.4106051316484816e-08,0.848444895433293,0.0,0.5424349792638168,0.0,-1.0324459365110474e-08,0.0,1.712908458786349e-08]]).T
+        self.state0 = np.array([[0.0,0.0,0.0,19.972030251160035,0.583277060149349,0.8819271613075602,0.06436424268940755,0.5441294442907747,0.0,-0.10353469164148243,0.011006126634753676,0.17076133286901607]]).T
 
-        self.u_star = np.array([[-0.14585694754829753,1.3312449061550355,-4.348177561943239e-09,5.201945699840635e-09]]).T
+        self.u_star = np.array([[-0.14934036623513286,1.320725428168033,-0.010838540376277156,0.012457232967195508]]).T
 
     def R_body_to_inertial(self, phi, theta, psi):
-        c_phi = np.cos(phi)
-        s_phi = np.sin(phi)
-        c_theta = np.cos(theta)
-        s_theta = np.sin(theta)
-        c_psi = np.cos(psi)
-        s_psi = np.sin(psi)
-
-        R = np.array([
-            [c_theta * c_psi, s_phi * s_theta * c_psi - c_phi * s_psi, c_phi * s_theta * c_psi + s_phi * s_psi],
-            [c_theta * s_psi, s_phi * s_theta * s_psi + c_phi * c_psi, c_phi * s_theta * s_psi - s_phi * c_psi],
-            [-s_theta,        s_phi * c_theta,                        c_phi * c_theta]
-        ])
-        return R
+        """Backward-compatible wrapper around sim.rotations.R_body_to_inertial.""" 
+        return R_body_to_inertial(phi, theta, psi, dtype=np.float64)

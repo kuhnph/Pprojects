@@ -1,3 +1,5 @@
+# src/plotting/dataLogging - 2/15/2026
+from __future__ import annotations  #(don't know what this does)
 import numpy as np
 import pandas as pd
 import os
@@ -5,7 +7,9 @@ from sim.params import params
 P = params()
 
 class Logger:
-    def __init__(self, N=int(P.N), n_state=12, n_u=4):
+    def __init__(self, N: int | None = None, n_state: int = 12, n_u: int = 4):
+        if N is None:
+            N = int(params().N)
         self.k = 0
         self.t = np.empty((N,), dtype=np.float32)
         self.x = np.empty((N, n_state), dtype=np.float32)
@@ -34,6 +38,7 @@ class Logger:
         df.insert(0, 't', t)
         df.to_parquet(os.path.join('out',"output.parquet"), index=False)
         np.save(os.path.join('out',"output.npz"),df)
+        np.savez_compressed(os.path.join('out',"output.npz"), t=t, x=x, u=u)
 
 
     def trim(self):
