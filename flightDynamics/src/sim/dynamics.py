@@ -88,7 +88,6 @@ class dynamics:
     def update(self, u):
         # Log before update
         self.logger.log(self.T, self.state, u)
-        print(f"{self.T} > {self.P.T_end - self.P.Ts}")
         if self.T >= self.P.T_end - self.P.Ts:
             self.logger.export()
 

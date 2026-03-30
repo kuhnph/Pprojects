@@ -7,7 +7,7 @@ class params:
         #simulation params
         self.T = 0
         self.Ts = 0.05
-        self.T_end = 10
+        self.T_end = 100
         self.N = self.T_end/self.Ts
 
         #Pysical properties
