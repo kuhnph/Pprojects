@@ -7,7 +7,7 @@ import numpy as np
 from sim.dynamics import dynamics
 from sim.params import params
 from viewer.mesh import aircraft_model_mesh
-from viewer.renderer import Renderer
+from viewer.renderer import renderer
 from viewer.window import SimWindow
 
 def main():
@@ -20,7 +20,7 @@ def main():
     def sim_step(dt):
         #assume you set dyn.Ts to dt or keep dyn.Ts and step once per tick.
         dyn.update(u=dyn_u())
-        P.T += P.Ts
+        P.T += dt
 
     def dyn_u():
         # simplest: hold trim input from params (replace with controller later)
@@ -34,10 +34,22 @@ def main():
         )
 
     def renderer_factory(ctx):
-        return Renderer(ctx, V, idx)
+        return renderer(ctx, V, idx)
 
-    win = SimWindow(sim_step, get_pose, renderer_factory, record=True, record_path="out/mav_view.mp4")
+    def get_sim_time():
+        return float(P.T)
 
+    win = SimWindow(
+        sim_step_func=sim_step,
+        get_pose_func=get_pose,
+        get_sim_time_func=get_sim_time,
+        renderer_factory=renderer_factory,
+        width=1000,
+        height=800,
+        render_hz=60,
+        sim_hz=200,
+        record=True,
+    )
     import pyglet
     try:
         pyglet.app.run()

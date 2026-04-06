@@ -53,7 +53,7 @@ def look_at(eye, target, up):
     M[:3, 3] = -M[:3, :3] @ eye
     return M
 
-class Renderer:
+class renderer:
     def __init__(self, ctx: moderngl.Context, vertices, indices):
         """
         GPU-side state rendering

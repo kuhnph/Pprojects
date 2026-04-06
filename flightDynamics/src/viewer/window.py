@@ -1,13 +1,3 @@
-# src/viewer/window.py - 2/15/2026
-"""viewer.window
-
-Pyglet window + ModernGL context that runs the simulation loop and renders frames.
-
-- Advances sim at fixed sim_hz using an accumulator
-- Renders at render_hz
-- Optional offscreen capture via FBO + FFmpegVideoWriter
-
-"""  
 import pyglet
 import moderngl
 import time
@@ -17,78 +7,41 @@ from viewer.videoCapture import FFmpegVideoWriter
 
 
 class SimWindow(pyglet.window.Window):
-    def __init__(self, sim_step_func, get_pose_func, renderer_factory,
+    def __init__(self, sim_step_func, get_pose_func, get_sim_time_func, renderer_factory,
                  width=1000, height=800, render_hz=60, sim_hz=200,
-                 record=False, record_path="results/mav_view.mp4"):
+                 record=False, record_path="out/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
 
         self.ctx = moderngl.create_context()
         self.renderer = renderer_factory(self.ctx)
 
-        # Fullscreen present quad (to display cap_tex on the window)
-        self.present_prog = self.ctx.program(
-            vertex_shader="""
-                #version 330
-                in vec2 in_pos;
-                in vec2 in_uv;
-                out vec2 v_uv;
-                void main() {
-                    v_uv = in_uv;
-                    gl_Position = vec4(in_pos, 0.0, 1.0);
-                }
-            """,
-            fragment_shader="""
-                #version 330
-                uniform sampler2D u_tex;
-                in vec2 v_uv;
-                out vec4 f_color;
-                void main() {
-                    f_color = texture(u_tex, v_uv);
-                }
-            """,
-        )
-
-        quad = np.array([
-            #  x,   y,   u,  v
-            -1.0, -1.0, 0.0, 0.0,
-             1.0, -1.0, 1.0, 0.0,
-            -1.0,  1.0, 0.0, 1.0,
-             1.0,  1.0, 1.0, 1.0,
-        ], dtype=np.float32)
-
-        self.present_vbo = self.ctx.buffer(quad.tobytes())
-        self.present_vao = self.ctx.vertex_array(
-            self.present_prog,
-            [(self.present_vbo, "2f 2f", "in_pos", "in_uv")]
-        )
-
-
         self.sim_step = sim_step_func
         self.get_pose = get_pose_func
+        self.get_sim_time = get_sim_time_func
 
         self.sim_dt = 1.0 / sim_hz
         self.accum = 0.0
         self.last = time.perf_counter()
 
-        # ----- Recording (Option C) -----
         self.record = record
         self.record_path = record_path
         self.record_fps = int(render_hz)
         self.writer = None
+        self._writer_size = None
 
+        self.time_label = pyglet.text.Label(
+            "t = 0.00 s",
+            font_name="Arial",
+            font_size=14,
+            x=10,
+            y=self.height - 10,
+            anchor_x="left",
+            anchor_y="top",
+            color=(255, 255, 255, 255),
+        )
 
-        # One callback that advances sim time (variable dt -> fixed sim steps)
         pyglet.clock.schedule(self._tick)
-
-        # Separate callback that forces redraw at a steady rate
         pyglet.clock.schedule_interval(self._render, 1.0 / render_hz)
-
-        # Offscreen capture targets (FBO + texture)
-        self.cap_tex = None
-        self.cap_depth = None
-        self.cap_fbo = None
-        self._cap_size = None
-
 
     def _ensure_writer(self):
         if not self.record:
@@ -104,10 +57,10 @@ class SimWindow(pyglet.window.Window):
                 outfile=self.record_path,
                 log_path="results/ffmpeg_capture.log",
             )
-            self._last_size = (fb_w, fb_h)
+            self._writer_size = (fb_w, fb_h)
             return
 
-        if (fb_w, fb_h) != self._last_size:
+        if (fb_w, fb_h) != self._writer_size:
             print("[record] Framebuffer resized; closing writer to avoid corrupt output.")
             self.writer.close()
             self.writer = None
@@ -119,7 +72,6 @@ class SimWindow(pyglet.window.Window):
         self.last = now
 
         self.accum += frame_dt
-        # prevent spiral of death if you pause/debug
         if self.accum > 0.25:
             self.accum = 0.25
 
@@ -128,21 +80,14 @@ class SimWindow(pyglet.window.Window):
             self.accum -= self.sim_dt
 
     def _render(self, _dt):
-        # If recording, make sure capture FBO and writer exist and sizes match
         if self.record:
-            self._ensure_capture_fbo()
             self._ensure_writer()
 
-        # Draw (on_draw will render into FBO if recording)
         self.dispatch_event("on_draw")
-
-        # If recording, read from the texture (NOT the window framebuffer)
-        if self.record and self.writer is not None:
-            frame = self.cap_tex.read(alignment=1)  # rgb bytes
-            self.writer.write(frame)
-
-        # Present to screen
         self.flip()
+
+        if self.record and self.writer is not None:
+            self._capture_window_frame()
 
 
     def on_close(self):
@@ -151,64 +96,56 @@ class SimWindow(pyglet.window.Window):
             self.writer = None
         super().on_close()
 
-
     def on_draw(self):
+        self.clear()
+
         pn, pe, pd, phi, theta, psi = self.get_pose()
         model = model_matrix_from_pose(pn, pe, pd, phi, theta, psi)
 
-        if self.record and self.cap_fbo is not None:
-            # Render into offscreen FBO only
-            self.cap_fbo.use()
-            self.cap_fbo.clear(0.0, 0.0, 0.0, 1.0)  # bright magenta
-            self.renderer.draw(self._cap_size[0], self._cap_size[1], model)
-            return
-
-        # Normal live render direct to screen
-        self.clear()
         self.renderer.draw(self.width, self.height, model)
+        self._draw_overlay()
 
+    def _draw_overlay(self):
+        sim_t = self.get_sim_time()
+        self.time_label.text = f"t = {sim_t:8.2f} s"
+        self.time_label.y = self.height - 10
 
+        try:
+            self.ctx.screen.use()
+            self.ctx.disable(moderngl.DEPTH_TEST)
+        except Exception:
+            pass
+
+        self.time_label.draw()
+
+        try:
+            self.ctx.enable(moderngl.DEPTH_TEST)
+        except Exception:
+            pass
+
+    def _capture_window_frame(self):
+        """
+        Capture exactly what is currently drawn in the window and write to FFmpeg.
+        """
+        buffer = pyglet.image.get_buffer_manager().get_color_buffer()
+        image_data = buffer.get_image_data()
+
+        width = image_data.width
+        height = image_data.height
+
+        # Pyglet commonly returns RGBA bytes
+        raw = image_data.get_data("RGBA", width * 4)
+
+        # Convert RGBA -> RGB by dropping alpha
+        rgba = np.frombuffer(raw, dtype=np.uint8).reshape((height, width, 4))
+        rgb = rgba[:, :, :3]
+
+        # Flip vertically so saved video matches on-screen orientation
+        # rgb = np.flipud(rgb)
+
+        self.writer.write(rgb.tobytes())
 
     @staticmethod
     def _model_matrix(pn, pe, pd, phi, theta, psi):
         """Backward-compatible wrapper for model matrix."""
         return model_matrix_from_pose(pn, pe, pd, phi, theta, psi)
-
-    def _ensure_capture_fbo(self):
-        # Use actual framebuffer pixel size, not logical window size
-        fb_w, fb_h = self.ctx.screen.size
-        size = (fb_w, fb_h)
-
-        if self._cap_size == size and self.cap_fbo is not None:
-            return
-
-        # (Re)create capture targets
-        self._cap_size = size
-
-        # RGB8 texture + depth buffer
-        self.cap_tex = self.ctx.texture(size, components=3, dtype="u1")
-        self.cap_depth = self.ctx.depth_renderbuffer(size)
-        self.cap_fbo = self.ctx.framebuffer(color_attachments=[self.cap_tex], depth_attachment=self.cap_depth)
-
-        # Optional: good defaults
-        self.cap_fbo.clear(0.05, 0.06, 0.08, 1.0)
-
-    def _present_to_screen(self):
-        self.ctx.screen.use()
-        fb_w, fb_h = self.ctx.screen.size
-        self.ctx.viewport = (0, 0, int(fb_w), int(fb_h))
-
-        # Clear the window framebuffer so we KNOW we touched it
-        self.ctx.clear(0.0, 0.2, 0.0, 1.0)  # dark green background
-
-        self.ctx.disable(moderngl.DEPTH_TEST)
-
-        self.present_prog["u_tex"].value = 0
-        self.cap_tex.use(location=0)
-
-        # IMPORTANT: force 4 verts
-        self.present_vao.render(mode=moderngl.TRIANGLE_STRIP, vertices=4)
-
-        self.ctx.enable(moderngl.DEPTH_TEST)
-
-
