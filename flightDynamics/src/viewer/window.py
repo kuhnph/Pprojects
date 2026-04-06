@@ -9,7 +9,8 @@ from viewer.videoCapture import FFmpegVideoWriter
 class SimWindow(pyglet.window.Window):
     def __init__(self, sim_step_func, get_pose_func, get_sim_time_func, renderer_factory,
                  width=1000, height=800, render_hz=60, sim_hz=200,
-                 record=False, record_path="out/mav_view.mp4"):
+                 record=False, record_mode=False, record_fps=20,
+                 record_path="results/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
 
         self.ctx = moderngl.create_context()
@@ -24,10 +25,16 @@ class SimWindow(pyglet.window.Window):
         self.last = time.perf_counter()
 
         self.record = record
+        self.record_mode = record_mode
         self.record_path = record_path
-        self.record_fps = int(render_hz)
+        self.record_fps = int(record_fps)
         self.writer = None
         self._writer_size = None
+
+        # Deterministic frame-to-sim relationship for record mode
+        self.frame_dt = 1.0 / self.record_fps
+        self.steps_per_frame = max(1, int(round(self.frame_dt / self.sim_dt)))
+        self.frame_dt = self.steps_per_frame * self.sim_dt
 
         self.time_label = pyglet.text.Label(
             "t = 0.00 s",
@@ -40,8 +47,11 @@ class SimWindow(pyglet.window.Window):
             color=(255, 255, 255, 255),
         )
 
-        pyglet.clock.schedule(self._tick)
-        pyglet.clock.schedule_interval(self._render, 1.0 / render_hz)
+        if not self.record_mode:
+            pyglet.clock.schedule(self._tick)
+            pyglet.clock.schedule_interval(self._render, 1.0 / render_hz)
+        else:
+            pyglet.clock.schedule_interval(self._render_record_mode, 1.0 / self.record_fps)
 
     def _ensure_writer(self):
         if not self.record:
@@ -84,11 +94,26 @@ class SimWindow(pyglet.window.Window):
             self._ensure_writer()
 
         self.dispatch_event("on_draw")
-        self.flip()
 
         if self.record and self.writer is not None:
             self._capture_window_frame()
 
+        self.flip()
+
+    def _render_record_mode(self, _dt):
+        if self.record:
+            self._ensure_writer()
+
+        # Advance simulation by fixed amount per output frame
+        for _ in range(self.steps_per_frame):
+            self.sim_step(self.sim_dt)
+
+        self.dispatch_event("on_draw")
+
+        if self.record and self.writer is not None:
+            self._capture_window_frame()
+
+        self.flip()
 
     def on_close(self):
         if self.writer is not None:
@@ -124,28 +149,20 @@ class SimWindow(pyglet.window.Window):
             pass
 
     def _capture_window_frame(self):
-        """
-        Capture exactly what is currently drawn in the window and write to FFmpeg.
-        """
         buffer = pyglet.image.get_buffer_manager().get_color_buffer()
         image_data = buffer.get_image_data()
 
         width = image_data.width
         height = image_data.height
 
-        # Pyglet commonly returns RGBA bytes
         raw = image_data.get_data("RGBA", width * 4)
-
-        # Convert RGBA -> RGB by dropping alpha
         rgba = np.frombuffer(raw, dtype=np.uint8).reshape((height, width, 4))
         rgb = rgba[:, :, :3]
 
-        # Flip vertically so saved video matches on-screen orientation
         # rgb = np.flipud(rgb)
 
         self.writer.write(rgb.tobytes())
 
     @staticmethod
     def _model_matrix(pn, pe, pd, phi, theta, psi):
-        """Backward-compatible wrapper for model matrix."""
         return model_matrix_from_pose(pn, pe, pd, phi, theta, psi)
