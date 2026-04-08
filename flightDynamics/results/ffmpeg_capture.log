@@ -1,27 +1,0 @@
-ffmpeg version 6.1.1 Copyright (c) 2000-2023 the FFmpeg developers
-  built with gcc 11.2.0 (Anaconda gcc)
-  configuration: --prefix=/home/kuhnph19/anaconda3/envs/MAV --cc=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-cc --ar=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-ar --nm=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-nm --ranlib=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-ranlib --strip=/home/task_176243685929256/conda-bld/ffmpeg_1762437043313/_build_env/bin/x86_64-conda-linux-gnu-strip --disable-doc --enable-swresample --enable-swscale --enable-openssl --enable-libxml2 --enable-libtheora --enable-demuxer=dash --enable-postproc --enable-hardcoded-tables --enable-libfreetype --enable-libharfbuzz --enable-libfontconfig --enable-libdav1d --enable-zlib --enable-libaom --enable-pic --enable-shared --disable-static --disable-gpl --enable-version3 --disable-sdl2 --enable-libopenh264 --enable-libopus --enable-libmp3lame --enable-libopenjpeg --enable-libvorbis --enable-pthreads --enable-libtesseract --enable-libvpx
-  libavutil      58. 29.100 / 58. 29.100
-  libavcodec     60. 31.102 / 60. 31.102
-  libavformat    60. 16.100 / 60. 16.100
-  libavdevice    60.  3.100 / 60.  3.100
-  libavfilter     9. 12.100 /  9. 12.100
-  libswscale      7.  5.100 /  7.  5.100
-  libswresample   4. 12.100 /  4. 12.100
-Input #0, rawvideo, from 'fd:':
-  Duration: N/A, start: 0.000000, bitrate: 384000 kb/s
-  Stream #0:0: Video: rawvideo (RGB[24] / 0x18424752), rgb24, 1000x800, 384000 kb/s, 20 tbr, 20 tbn
-Stream mapping:
-  Stream #0:0 -> #0:0 (rawvideo (native) -> h264 (libopenh264))
-[libopenh264 @ 0x6d3b5c0] [OpenH264] this = 0x0x71512d0, Warning:layerId(0) doesn't support profile(578), change to UNSPECIFIC profile
-[libopenh264 @ 0x6d3b5c0] [OpenH264] this = 0x0x71512d0, Warning:bEnableFrameSkip = 0,bitrate can't be controlled for RC_QUALITY_MODE,RC_BITRATE_MODE and RC_TIMESTAMP_MODE without enabling skip frame.
-Output #0, mp4, to 'results/mav_view.mp4':
-  Metadata:
-    encoder         : Lavf60.16.100
-  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1000x800, q=2-31, 10000 kb/s, 20 fps, 10240 tbn
-    Metadata:
-      encoder         : Lavc60.31.102 libopenh264
-    Side data:
-      cpb: bitrate max/min/avg: 10000000/0/10000000 buffer size: 0 vbv_delay: N/A
-frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.00 bitrate=N/A speed=N/A    frame=    9 fps=0.0 q=-0.0 size=       0kB time=00:00:00.45 bitrate=   0.9kbits/s speed=0.893x    frame=   23 fps= 23 q=-0.0 size=       0kB time=00:00:01.15 bitrate=   0.3kbits/s speed=1.14x    frame=   38 fps= 25 q=-0.0 size=       0kB time=00:00:01.90 bitrate=   0.2kbits/s speed=1.24x    frame=   52 fps= 26 q=-0.0 size=       0kB time=00:00:02.60 bitrate=   0.1kbits/s speed=1.28x    frame=   66 fps= 26 q=-0.0 size=       0kB time=00:00:03.30 bitrate=   0.1kbits/s speed=1.28x    frame=   79 fps= 26 q=-0.0 size=       0kB time=00:00:03.95 bitrate=   0.1kbits/s speed=1.29x    frame=   94 fps= 26 q=-0.0 size=       0kB time=00:00:04.70 bitrate=   0.1kbits/s speed=1.31x    frame=  108 fps= 26 q=-0.0 size=       0kB time=00:00:05.40 bitrate=   0.1kbits/s speed=1.32x    frame=  120 fps= 26 q=-0.0 size=     256kB time=00:00:06.00 bitrate= 349.6kbits/s speed= 1.3x    frame=  134 fps= 26 q=-0.0 size=     256kB time=00:00:06.70 bitrate= 313.1kbits/s speed= 1.3x    frame=  146 fps= 26 q=-0.0 size=     256kB time=00:00:07.30 bitrate= 287.3kbits/s speed=1.29x    frame=  159 fps= 26 q=-0.0 size=     256kB time=00:00:07.95 bitrate= 263.8kbits/s speed=1.29x    frame=  171 fps= 26 q=-0.0 size=     512kB time=00:00:08.55 bitrate= 490.6kbits/s speed=1.28x    frame=  181 fps= 25 q=-0.0 size=     512kB time=00:00:09.05 bitrate= 463.5kbits/s speed=1.24x    frame=  188 fps= 24 q=-0.0 size=     512kB time=00:00:09.40 bitrate= 446.2kbits/s speed= 1.2x    frame=  199 fps= 24 q=-0.0 size=     512kB time=00:00:09.95 bitrate= 421.6kbits/s speed=1.19x    frame=  207 fps= 23 q=-0.0 size=     768kB time=00:00:10.35 bitrate= 607.9kbits/s speed=1.17x    frame=  218 fps= 23 q=-0.0 size=     768kB time=00:00:10.90 bitrate= 577.2kbits/s speed=1.16x    frame=  231 fps= 23 q=-0.0 size=     768kB time=00:00:11.55 bitrate= 544.7kbits/s speed=1.17x    frame=  243 fps= 23 q=-0.0 size=     768kB time=00:00:12.15 bitrate= 517.8kbits/s speed=1.17x    frame=  254 fps= 23 q=-0.0 size=    1024kB time=00:00:12.70 bitrate= 660.6kbits/s speed=1.16x    frame=  269 fps= 23 q=-0.0 size=    1024kB time=00:00:13.45 bitrate= 623.7kbits/s speed=1.17x    frame=  284 fps= 24 q=-0.0 size=    1280kB time=00:00:14.20 bitrate= 738.5kbits/s speed=1.18x    frame=  296 fps= 24 q=-0.0 size=    1280kB time=00:00:14.80 bitrate= 708.5kbits/s speed=1.18x    frame=  307 fps= 24 q=-0.0 size=    1280kB time=00:00:15.35 bitrate= 683.1kbits/s speed=1.18x    frame=  319 fps= 24 q=-0.0 size=    1536kB time=00:00:15.95 bitrate= 788.9kbits/s speed=1.18x    frame=  330 fps= 23 q=-0.0 size=    1536kB time=00:00:16.50 bitrate= 762.6kbits/s speed=1.17x    frame=  343 fps= 24 q=-0.0 size=    1536kB time=00:00:17.15 bitrate= 733.7kbits/s speed=1.18x    [out#0/mp4 @ 0x6d395c0] video:1733kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.125057%
-frame=  344 fps= 24 q=-0.0 Lsize=    1735kB time=00:00:17.15 bitrate= 828.7kbits/s speed=1.17x    

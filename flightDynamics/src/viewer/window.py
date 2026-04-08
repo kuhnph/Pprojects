@@ -10,7 +10,7 @@ class SimWindow(pyglet.window.Window):
     def __init__(self, sim_step_func, get_pose_func, get_sim_time_func, renderer_factory,
                  width=1000, height=800, render_hz=60, sim_hz=200,
                  record=False, record_mode=False, record_fps=20,
-                 record_path="results/mav_view.mp4"):
+                 record_path="out/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
 
         self.ctx = moderngl.create_context()
@@ -65,7 +65,7 @@ class SimWindow(pyglet.window.Window):
                 height=fb_h,
                 fps=self.record_fps,
                 outfile=self.record_path,
-                log_path="results/ffmpeg_capture.log",
+                log_path="out/ffmpeg_capture.log",
             )
             self._writer_size = (fb_w, fb_h)
             return
