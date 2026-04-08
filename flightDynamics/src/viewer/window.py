@@ -9,7 +9,7 @@ from viewer.videoCapture import FFmpegVideoWriter
 class SimWindow(pyglet.window.Window):
     def __init__(self, sim_step_func, get_pose_func, get_sim_time_func, renderer_factory,
                  width=1000, height=800, render_hz=60, sim_hz=200,
-                 record=False, record_mode=False, record_fps=20,
+                 record=False, record_mode=False, record_fps=30,
                  record_path="out/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
 

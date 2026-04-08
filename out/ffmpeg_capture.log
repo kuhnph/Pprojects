@@ -9,19 +9,19 @@ ffmpeg version 6.1.1 Copyright (c) 2000-2023 the FFmpeg developers
   libswscale      7.  5.100 /  7.  5.100
   libswresample   4. 12.100 /  4. 12.100
 Input #0, rawvideo, from 'fd:':
-  Duration: N/A, start: 0.000000, bitrate: 384000 kb/s
-  Stream #0:0: Video: rawvideo (RGB[24] / 0x18424752), rgb24, 1000x800, 384000 kb/s, 20 tbr, 20 tbn
+  Duration: N/A, start: 0.000000, bitrate: 576000 kb/s
+  Stream #0:0: Video: rawvideo (RGB[24] / 0x18424752), rgb24, 1000x800, 576000 kb/s, 30 tbr, 30 tbn
 Stream mapping:
   Stream #0:0 -> #0:0 (rawvideo (native) -> h264 (libopenh264))
-[libopenh264 @ 0x3ab9d5c0] [OpenH264] this = 0x0x3afb32d0, Warning:layerId(0) doesn't support profile(578), change to UNSPECIFIC profile
-[libopenh264 @ 0x3ab9d5c0] [OpenH264] this = 0x0x3afb32d0, Warning:bEnableFrameSkip = 0,bitrate can't be controlled for RC_QUALITY_MODE,RC_BITRATE_MODE and RC_TIMESTAMP_MODE without enabling skip frame.
+[libopenh264 @ 0x303f55c0] [OpenH264] this = 0x0x3080b2d0, Warning:layerId(0) doesn't support profile(578), change to UNSPECIFIC profile
+[libopenh264 @ 0x303f55c0] [OpenH264] this = 0x0x3080b2d0, Warning:bEnableFrameSkip = 0,bitrate can't be controlled for RC_QUALITY_MODE,RC_BITRATE_MODE and RC_TIMESTAMP_MODE without enabling skip frame.
 Output #0, mp4, to 'out/mav_view.mp4':
   Metadata:
     encoder         : Lavf60.16.100
-  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1000x800, q=2-31, 10000 kb/s, 20 fps, 10240 tbn
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1000x800, q=2-31, 10000 kb/s, 30 fps, 15360 tbn
     Metadata:
       encoder         : Lavc60.31.102 libopenh264
     Side data:
       cpb: bitrate max/min/avg: 10000000/0/10000000 buffer size: 0 vbv_delay: N/A
-frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.00 bitrate=N/A speed=N/A    frame=   15 fps=0.0 q=-0.0 size=       0kB time=00:00:00.75 bitrate=   0.5kbits/s speed=1.48x    frame=   30 fps= 30 q=-0.0 size=       0kB time=00:00:01.50 bitrate=   0.3kbits/s speed=1.49x    frame=   47 fps= 31 q=-0.0 size=       0kB time=00:00:02.35 bitrate=   0.2kbits/s speed=1.55x    frame=   63 fps= 31 q=-0.0 size=       0kB time=00:00:03.15 bitrate=   0.1kbits/s speed=1.56x    frame=   81 fps= 32 q=-0.0 size=       0kB time=00:00:04.05 bitrate=   0.1kbits/s speed= 1.6x    frame=   98 fps= 32 q=-0.0 size=       0kB time=00:00:04.90 bitrate=   0.1kbits/s speed=1.61x    frame=  113 fps= 32 q=-0.0 size=       0kB time=00:00:05.65 bitrate=   0.1kbits/s speed=1.59x    frame=  130 fps= 32 q=-0.0 size=       0kB time=00:00:06.50 bitrate=   0.1kbits/s speed=1.59x    frame=  146 fps= 32 q=-0.0 size=       0kB time=00:00:07.30 bitrate=   0.1kbits/s speed=1.58x    frame=  163 fps= 32 q=-0.0 size=       0kB time=00:00:08.15 bitrate=   0.0kbits/s speed=1.59x    frame=  176 fps= 31 q=-0.0 size=       0kB time=00:00:08.80 bitrate=   0.0kbits/s speed=1.56x    frame=  187 fps= 30 q=-0.0 size=       0kB time=00:00:09.35 bitrate=   0.0kbits/s speed=1.52x    frame=  200 fps= 30 q=-0.0 size=       0kB time=00:00:10.00 bitrate=   0.0kbits/s speed= 1.5x    frame=  213 fps= 30 q=-0.0 size=       0kB time=00:00:10.65 bitrate=   0.0kbits/s speed=1.48x    frame=  229 fps= 30 q=-0.0 size=       0kB time=00:00:11.45 bitrate=   0.0kbits/s speed=1.49x    frame=  243 fps= 30 q=-0.0 size=       0kB time=00:00:12.15 bitrate=   0.0kbits/s speed=1.48x    frame=  258 fps= 30 q=-0.0 size=       0kB time=00:00:12.90 bitrate=   0.0kbits/s speed=1.48x    frame=  275 fps= 30 q=-0.0 size=       0kB time=00:00:13.75 bitrate=   0.0kbits/s speed=1.49x    frame=  292 fps= 30 q=-0.0 size=       0kB time=00:00:14.60 bitrate=   0.0kbits/s speed= 1.5x    [out#0/mp4 @ 0x3ab9b5c0] video:89kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.235821%
-frame=  302 fps= 30 q=-0.0 Lsize=      91kB time=00:00:15.05 bitrate=  49.5kbits/s speed= 1.5x    
+frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:00.00 bitrate=N/A speed=N/A    frame=   10 fps=0.0 q=-0.0 size=     256kB time=00:00:00.33 bitrate=6292.6kbits/s speed=0.649x    frame=   21 fps= 20 q=-0.0 size=     768kB time=00:00:00.70 bitrate=8988.3kbits/s speed=0.676x    frame=   32 fps= 21 q=-0.0 size=    1024kB time=00:00:01.06 bitrate=7864.7kbits/s speed=0.69x    frame=   48 fps= 23 q=-0.0 size=    1792kB time=00:00:01.60 bitrate=9175.3kbits/s speed=0.781x    frame=   65 fps= 25 q=-0.0 size=    2560kB time=00:00:02.16 bitrate=9679.3kbits/s speed=0.847x    frame=   83 fps= 27 q=-0.0 size=    3072kB time=00:00:02.76 bitrate=9096.2kbits/s speed=0.897x    frame=  101 fps= 28 q=-0.0 size=    3840kB time=00:00:03.36 bitrate=9343.9kbits/s speed=0.932x    frame=  118 fps= 29 q=-0.0 size=    4608kB time=00:00:03.93 bitrate=9597.2kbits/s speed=0.95x    frame=  134 fps= 29 q=-0.0 size=    5376kB time=00:00:04.46 bitrate=9859.8kbits/s speed=0.958x    frame=  152 fps= 29 q=-0.0 size=    5888kB time=00:00:05.06 bitrate=9520.0kbits/s speed=0.975x    [out#0/mp4 @ 0x303f35c0] video:6248kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.023117%
+frame=  154 fps= 29 q=-0.0 Lsize=    6249kB time=00:00:05.10 bitrate=10038.1kbits/s speed=0.971x    
