@@ -32,10 +32,10 @@ class Logger:
         u = self.u
         state_cols = ["pn","pe","pd","u","v","w","phi","theta","psi","p","q","r"]
         u_cols = ["del_e","del_t","del_a","del_r"]
-        df_x = pd.DataFrame(x, columns=state_cols)
-        df_u = pd.DataFrame(u, columns=u_cols)
+        df_x = pd.DataFrame(x[0:self.k], columns=state_cols)
+        df_u = pd.DataFrame(u[0:self.k], columns=u_cols)
         df = pd.concat([df_x,df_u], axis=1)
-        df.insert(0, 't', t)
+        df.insert(0, 't', t[0:self.k])
         df.to_parquet(os.path.join('out',"output.parquet"), index=False)
         np.save(os.path.join('out',"output.npz"),df)
         np.savez_compressed(os.path.join('out',"output.npz"), t=t, x=x, u=u)

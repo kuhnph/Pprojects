@@ -9,17 +9,21 @@ from sim.params import params
 from viewer.mesh import aircraft_model_mesh
 from viewer.renderer import renderer
 from viewer.window import SimWindow
+from plotting.dataLogging import Logger
 
 def main():
     dyn = dynamics()
     P = params()
+    L = Logger()
+    log = Logger(N=int(P.N))
 
     # Static mesh once
     V, idx = aircraft_model_mesh(scale=5.0)
 
     def sim_step(dt):
-        #assume you set dyn.Ts to dt or keep dyn.Ts and step once per tick.
-        dyn.update(u=dyn_u())
+        u = dyn_u()
+        log.log(P.T,dyn.state,u)
+        dyn.update(u)
         P.T += dt
 
     def dyn_u():
@@ -56,6 +60,8 @@ def main():
         pyglet.app.run()
     finally:
         # force finalize ffmpeg even if the app exits without closing the window
+        print('Exporting')
+        log.export()
         try:
             if getattr(win, "writer", None) is not None:
                 win.writer.close()

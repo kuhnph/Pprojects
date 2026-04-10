@@ -174,22 +174,32 @@ class SimWindow(pyglet.window.Window):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.SPACE:
-            self.del_t += .01
+            self.del_t += .001
+            print(f"Thrust: {self.del_t:.3}")
+        if symbol == key.MOD_ALT:
+            self.del_t += .001
+            print(f"Thrust: {self.del_t:.3}")
 
         if symbol == key.UP:
-            self.del_e += .01
+            self.del_e += .001
+            print(f"Elevator Deflection: {self.del_e:.3}")
         if symbol == key.DOWN:
-            self.del_e -= .01
+            self.del_e -= .001
+            print(f"Elevator Deflection: {self.del_e:.3}")
 
         if symbol == key.LEFT:
-            self.del_a += .01
+            self.del_a += .001
+            print(f"Aleron Deflection: {self.del_a:.3}")
         if symbol == key.RIGHT:
-            self.del_a -= .01
+            self.del_a -= .001
+            print(f"Aleron Deflection: {self.del_a:.3}")
 
         if symbol == key.A:
-            self.del_r += .01
+            self.del_r += .001
+            print(f'Rudder Deflection: {self.del_r:.3}')
         if symbol == key.D:
-            self.del_r -= .01
+            self.del_r -= .001
+            print(f'Rudder Deflection: {self.del_r:.3}')
 
         self.u = np.array([[self.del_e,self.del_t,self.del_a,self.del_r]]).T
 

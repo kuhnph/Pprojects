@@ -7,7 +7,7 @@ class params:
         #simulation params
         self.T = 0
         self.Ts = 0.05
-        self.T_end = 9e9
+        self.T_end = 1e5
         self.N = self.T_end/self.Ts
         self.Logging = False
 
