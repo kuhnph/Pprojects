@@ -10,13 +10,15 @@ from sim.rotations import R_body_to_inertial
 
 P = params()
 FM = FaM()
-L = Logger()
+if P.Logging:
+    L = Logger()
 
 class dynamics:
     def __init__(self, P: params | None = None):
         self.P = P if P is not None else params()
         self.fam = FaM(self.P)
-        self.logger = Logger(N=int(self.P.N))
+        if self.P.Logging:
+            self.logger = Logger(N=int(self.P.N))
 
         self.state = self.P.state0.copy()
         self.Ts = float(self.P.Ts)
@@ -87,9 +89,9 @@ class dynamics:
 
     def update(self, u):
         # Log before update
-        # self.logger.log(self.T, self.state, u)
-        if self.T >= self.P.T_end - self.P.Ts:
-            self.logger.export()
+        if P.Logging:
+            if self.T >= self.P.T_end - self.P.Ts:
+                self.logger.export()
 
         self.T += self.Ts
         self.rk4(u)

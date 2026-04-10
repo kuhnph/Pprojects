@@ -44,7 +44,7 @@ def look_at(eye, target, up):
     M[:3, 3] = -M[:3, :3] @ eye
     return M
 
-def build_ground_grid(extent=1000.0, minor_spacing=50.0, major_spacing=250.0, down=0.0):
+def build_ground_grid(extent=100000.0, minor_spacing=50.0, major_spacing=250.0, down=0.0):
     minor_lines = []
     major_lines = []
 

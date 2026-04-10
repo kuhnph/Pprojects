@@ -1,9 +1,12 @@
 import pyglet
+from pyglet.window import key
 import moderngl
 import time
 import numpy as np
 from sim.rotations import model_matrix_from_pose
 from viewer.videoCapture import FFmpegVideoWriter
+from sim.params import params
+P = params()
 
 
 class SimWindow(pyglet.window.Window):
@@ -12,7 +15,13 @@ class SimWindow(pyglet.window.Window):
                  record=False, record_mode=False, record_fps=30,
                  record_path="out/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
-
+        
+        self.del_e = P.u[0,0]
+        self.del_t = P.u[1,0]
+        self.del_a = P.u[2,0]
+        self.del_r = P.u[3,0]
+        self.u = np.array([[self.del_e,self.del_t,self.del_a,self.del_r]]).T
+        
         self.ctx = moderngl.create_context()
         self.renderer = renderer_factory(self.ctx)
 
@@ -162,6 +171,27 @@ class SimWindow(pyglet.window.Window):
         # rgb = np.flipud(rgb)
 
         self.writer.write(rgb.tobytes())
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.SPACE:
+            self.del_t += .01
+
+        if symbol == key.UP:
+            self.del_e += .01
+        if symbol == key.DOWN:
+            self.del_e -= .01
+
+        if symbol == key.LEFT:
+            self.del_a += .01
+        if symbol == key.RIGHT:
+            self.del_a -= .01
+
+        if symbol == key.A:
+            self.del_r += .01
+        if symbol == key.D:
+            self.del_r -= .01
+
+        self.u = np.array([[self.del_e,self.del_t,self.del_a,self.del_r]]).T
 
     @staticmethod
     def _model_matrix(pn, pe, pd, phi, theta, psi):

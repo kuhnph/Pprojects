@@ -7,8 +7,9 @@ class params:
         #simulation params
         self.T = 0
         self.Ts = 0.05
-        self.T_end = 200
+        self.T_end = 9e9
         self.N = self.T_end/self.Ts
+        self.Logging = False
 
         #Pysical properties
         self.noZero = 1e-3
@@ -84,6 +85,7 @@ class params:
         self.state0 = np.array([[0.0,0.0,0.0,19.97213816555619,-3.4106051316484816e-08,1.055318480807477,1.7053025658242407e-10,0.152790440292938,0.0,-3.38214786100923e-10,3.745413743113032e-19,2.1963338460718988e-09]]).T
 
         self.u_star = np.array([[-0.1639169479601792,0.9995752159282119,-1.1218706735438058e-09,1.2740502677867338e-09]]).T
+        self.u = self.u_star
 
     def R_body_to_inertial(self, phi, theta, psi):
         """Backward-compatible wrapper around sim.rotations.R_body_to_inertial.""" 

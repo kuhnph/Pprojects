@@ -24,7 +24,7 @@ def main():
 
     def dyn_u():
         # simplest: hold trim input from params (replace with controller later)
-        return P.u_star
+        return win.u
 
     def get_pose():
         s = dyn.state
@@ -48,8 +48,9 @@ def main():
         height=800,
         render_hz=60,
         sim_hz=200,
-        record=True,
+        record=False,
     )
+
     import pyglet
     try:
         pyglet.app.run()
