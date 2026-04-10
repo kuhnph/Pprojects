@@ -11,7 +11,7 @@ P = params()
 
 class SimWindow(pyglet.window.Window):
     def __init__(self, sim_step_func, get_pose_func, get_sim_time_func, renderer_factory,
-                 width=1000, height=800, render_hz=60, sim_hz=200,
+                 width=1000, height=800, render_hz=60, sim_hz=P.sim_hz,
                  record=False, record_mode=False, record_fps=30,
                  record_path="out/mav_view.mp4"):
         super().__init__(width=width, height=height, caption="MAV Viewer (GPU)", resizable=True)
@@ -195,10 +195,10 @@ class SimWindow(pyglet.window.Window):
             print(f"Aleron Deflection: {self.del_a:.3}")
 
         if symbol == key.A:
-            self.del_r += .001
+            self.del_r -= .001
             print(f'Rudder Deflection: {self.del_r:.3}')
         if symbol == key.D:
-            self.del_r -= .001
+            self.del_r += .001
             print(f'Rudder Deflection: {self.del_r:.3}')
 
         self.u = np.array([[self.del_e,self.del_t,self.del_a,self.del_r]]).T

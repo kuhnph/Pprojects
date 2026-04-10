@@ -1,75 +1,107 @@
-# src/sim/FaM - 2/15/2026
+# src/sim/FaM.py
 from __future__ import annotations
 
-from sim.params import params
 import numpy as np
 from numpy import cos, sin
+from sim.params import params
 
-P = params()
 
-# P is now provided by the caller (dynamics) to avoid globals.
 class FaM:
     def __init__(self, P: params | None = None):
         self.P = P if P is not None else params()
 
     def FaM_Calc(self, state, U):
-        #pull states in to variables to make things a tad easier
-        pn = state.item(0)
-        pe = state.item(1)
-        pd = state.item(2)
+        P = self.P
+
+        # States
         u = state.item(3)
         v = state.item(4)
         w = state.item(5)
         phi = state.item(6)
         theta = state.item(7)
-        psi = state.item(8)
         p = state.item(9)
         q = state.item(10)
         r = state.item(11)
 
-        del_e = U.item(0)
-        del_t = U.item(1)
-        del_a = U.item(2)
-        del_r = U.item(3)
+        # Inputs: [delta_e, delta_t, delta_a, delta_r]
+        delta_e = U.item(0)
+        delta_t = U.item(1)
+        delta_a = U.item(2)
+        delta_r = U.item(3)
 
-        #Define Va, alpha, beta up here somewhere
-        Va = max(np.sqrt(u**2+v**2+w**2), P.noZero)    #this doesn't account for wind
-        alpha = np.arctan2(w,u)            #this also doesn't account for wind
-        beta = np.arctan2(v,np.sqrt(u**2+v**2+w**2))
+        # Air-data quantities
+        Va = max(np.sqrt(u**2 + v**2 + w**2), P.noZero)
+        alpha = np.arctan2(w, u)
+        beta = np.arcsin(np.clip(v / Va, -1.0, 1.0))
 
-        #Lift Coefficient
-        num = 1 + np.exp(-P.M * (alpha - P.alpha0)) + np.exp(P.M * (alpha + P.alpha0))
-        den = (1 + np.exp(-P.M * (alpha - P.alpha0))) * (1 + np.exp(P.M * (alpha + P.alpha0)))
-        sigma = num/den
-        CL = (1-sigma)*(P.CL_0+P.CL_alpha*alpha) + sigma*(2*np.sign(alpha)*sin(alpha)**2*cos(alpha))
+        # Lift coefficient blending function
+        num = 1.0 + np.exp(-P.M * (alpha - P.alpha0)) + np.exp(P.M * (alpha + P.alpha0))
+        den = (1.0 + np.exp(-P.M * (alpha - P.alpha0))) * (1.0 + np.exp(P.M * (alpha + P.alpha0)))
+        sigma = num / den
 
-        # CL = (np.pi*P.AR)/(1 + np.sqrt(1+(P.AR/2)**2))
-        CD = P.CD_p + (P.CL_0 + P.CL_alpha*alpha)**2/(np.pi*np.e*P.AR)
+        C_L = (1.0 - sigma) * (P.C_L_0 + P.C_L_alpha * alpha) + sigma * (
+            2.0 * np.sign(alpha) * sin(alpha) ** 2 * cos(alpha)
+        )
 
-        CX = -CD*cos(alpha) + CL*sin(alpha)
-        CX_q = -P.CD_q*cos(alpha) + P.Cl_q*sin(alpha)
-        CX_del_e = -P.CD_del_e*cos(alpha) + P.CL_del_e*sin(alpha)
-        CZ = -CD*sin(alpha) - CL*cos(alpha)
-        CZ_q = -P.CD_q*sin(alpha) - P.Cl_q*cos(alpha)
-        CZ_del_e = -P.CD_del_e*sin(alpha) - P.CL_del_e*cos(alpha)
+        C_D = P.C_D_p + (P.C_L_0 + P.C_L_alpha * alpha) ** 2 / (np.pi * P.e * P.AR)
 
-        #Forces
-        T1 = np.array([[-P.m*P.g*sin(theta)],
-                       [P.m*P.g*cos(theta)*sin(phi)],
-                       [P.m*P.g*cos(theta)*cos(phi)]])
+        # Body-axis aerodynamic coefficients
+        C_X = -C_D * cos(alpha) + C_L * sin(alpha)
+        C_X_q = -P.C_D_q * cos(alpha) + P.C_L_q * sin(alpha)
+        C_X_delta_e = -P.C_D_delta_e * cos(alpha) + P.C_L_delta_e * sin(alpha)
 
-        T2 = .5*P.rho*Va**2*P.S*np.array([[CX+CX_q*P.c/(2*Va)*q + CX_del_e*del_e],
-                                          [P.CY_0+P.CY_beta*beta + P.CY_p*P.b/(2*Va)*p + P.CY_r*P.b/(2*Va)*r + P.CY_del_alpha*del_a + P.CY_del_r*del_r],
-                                          [CZ + CZ_q*P.c/(2*Va)*q + CZ_del_e*del_e]])
+        C_Z = -C_D * sin(alpha) - C_L * cos(alpha)
+        C_Z_q = -P.C_D_q * sin(alpha) - P.C_L_q * cos(alpha)
+        C_Z_delta_e = -P.C_D_delta_e * sin(alpha) - P.C_L_delta_e * cos(alpha)
 
-        T3 = .5*P.rho*P.S_prop*P.C_prop*np.array([[(P.k_motor*del_t)**2-Va**2],
-                                                  [0],
-                                                  [0]])
+        # Gravity force resolved in body frame
+        F_gravity = np.array([
+            [-P.m * P.g * np.sin(theta)],
+            [ P.m * P.g * np.cos(theta) * np.sin(phi)],
+            [ P.m * P.g * np.cos(theta) * np.cos(phi)],
+        ], dtype=np.float64)
 
-        F = T1+T2+T3
+        # Aerodynamic forces
+        F_aero = 0.5 * P.rho * Va**2 * P.S_wing * np.array([
+            [C_X + C_X_q * (P.c / (2.0 * Va)) * q + C_X_delta_e * delta_e],
+            [P.C_Y_0 + P.C_Y_beta * beta + P.C_Y_p * (P.b / (2.0 * Va)) * p
+             + P.C_Y_r * (P.b / (2.0 * Va)) * r + P.C_Y_delta_a * delta_a + P.C_Y_delta_r * delta_r],
+            [C_Z + C_Z_q * (P.c / (2.0 * Va)) * q + C_Z_delta_e * delta_e],
+        ], dtype=np.float64)
 
-        M = .5*P.rho*Va**2*P.S*np.array([[P.b*(P.Cl_0+P.Cl_beta*beta+P.Cl_p*P.b/(2*Va)*p + P.Cl_r*P.b/(2*Va)*r + P.Cl_del_alpha*del_a + P.Cl_del_r*del_r) + -P.k_Tp*(P.k_Omega*del_t)**2],
-                                         [P.c*( P.Cm_0+ P.Cm_alpha*alpha + P.Cm_q*P.c/(2*Va)*q + P.CM_del_e*del_e)],
-                                         [P.b*(P.Cn_0 + P.Cn_beta*beta + P.Cn_p*P.b/(2*Va)*p + P.Cn_r*P.b/(2*Va)*r + P.Cn_del_alpha*del_a + P.Cn_del_r*del_r)]])
-        
+        # Propulsion force
+        F_prop = 0.5 * P.rho * P.S_prop * P.C_prop * np.array([
+            [(P.k_motor * delta_t) ** 2 - Va**2],
+            [0.0],
+            [0.0],
+        ], dtype=np.float64)
+
+        F = F_gravity + F_aero + F_prop
+
+        # Moments
+        M = 0.5 * P.rho * Va**2 * P.S_wing * np.array([
+            [P.b * (
+                P.C_ell_0
+                + P.C_ell_beta * beta
+                + P.C_ell_p * (P.b / (2.0 * Va)) * p
+                + P.C_ell_r * (P.b / (2.0 * Va)) * r
+                + P.C_ell_delta_a * delta_a
+                + P.C_ell_delta_r * delta_r
+            ) - P.k_T_p * (P.k_Omega * delta_t) ** 2],
+            [P.c * (
+                P.C_m_0
+                + P.C_m_alpha * alpha
+                + P.C_m_q * (P.c / (2.0 * Va)) * q
+                + P.C_m_delta_e * delta_e
+            )],
+            [P.b * (
+                P.C_n_0
+                + P.C_n_beta * beta
+                + P.C_n_p * (P.b / (2.0 * Va)) * p
+                + P.C_n_r * (P.b / (2.0 * Va)) * r
+                + P.C_n_delta_a * delta_a
+                + P.C_n_delta_r * delta_r
+            )],
+        ], dtype=np.float64)
+
         return F, M
